@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: template-mongo-container
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: template-container
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://template-mongo-container:27017/
+      - MONGO_DB_NAME=template
+      - PORT=4000
+
+volumes:
+  mongo-data:
